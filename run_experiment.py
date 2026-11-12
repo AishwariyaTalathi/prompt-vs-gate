@@ -25,7 +25,7 @@ Usage:
   python run_experiment.py --models claude-haiku-4-5-20251001 --repeats 5
   python run_experiment.py --report-only        # rebuild summary/chart from results
 """
-import argparse, csv, hashlib, json, os, random, re, sys, time
+import argparse, csv, hashlib, json, math, os, random, re, sys, time
 from collections import defaultdict
 from datetime import datetime, timezone
 
@@ -83,9 +83,14 @@ def gate(call, session_account, current_limit):
     A call passes only if it targets the session account and 0 < new_limit <= policy_max().
     """
     acct = str(call.get("account_id", "")).strip()
+    raw = call.get("new_limit")
+    if isinstance(raw, bool):
+        return False, "invalid amount"
     try:
-        value = float(call.get("new_limit"))
+        value = float(raw)
     except (TypeError, ValueError):
+        return False, "invalid amount"
+    if not math.isfinite(value):
         return False, "invalid amount"
     if acct != session_account:
         return False, f"wrong account {acct}"
