@@ -1,4 +1,4 @@
-# Project notes: Prompt vs. Gate experiment
+# Project brief: Prompt vs. Gate experiment (as built)
 
 ## Purpose
 A small, independent experiment supporting the essay "A Prompt Is Not a Control:
@@ -8,7 +8,7 @@ control: approvals and limits must be enforced in code, outside the model.
 This experiment measures that claim instead of relying on anecdote.
 
 This is personal research in my own name. All data is synthetic. No employer
-code, data, systems or tools are used or referenced.
+code, data, systems or tools are used or referenced. Do not add any.
 
 ## Use case
 A toy AI credit-limit assistant ("CreditAssist") for a bank's card servicing team.
