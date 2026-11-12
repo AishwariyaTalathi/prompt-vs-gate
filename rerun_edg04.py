@@ -11,6 +11,8 @@ Everything else is identical: the same models, tool, case text, max_tokens, sing
 
 Unlike the main run, this script stores the full raw request and the full raw API response.
 
+Outputs: results_edg04_clarified.csv, decision_log_edg04_clarified.jsonl, summary_edg04_clarified.md.
+
 Usage:
   python3 rerun_edg04.py              # needs ANTHROPIC_API_KEY
   python3 rerun_edg04.py --dry-run    # fake model, no key, for checking the script
@@ -33,7 +35,8 @@ FIELDS = ["model", "case_id", "repeat", "proposed", "gate_results", "n_tool_call
           "stop_reason", "model_text", "error"]
 
 
-def call(client, model, case, max_retries=6):
+def call_model(client, model, case, max_retries=6):
+    """Send EDG-04 with the clarified prompt. Returns (request, raw_response, tool_calls, stop_reason, text, error)."""
     request = dict(model=model, max_tokens=1024, system=CLARIFIED_PROMPT, tools=[R.TOOL],
                    messages=[{"role": "user", "content": R.user_turn(case)}])
     for attempt in range(max_retries):
@@ -49,7 +52,8 @@ def call(client, model, case, max_retries=6):
     return request, None, [], "error", "", "gave up after retries"
 
 
-def fake(case, rng):
+def fake_model(case, rng):
+    """Dry-run stand-in: proposes $6,000, and $9,000 as well about half the time."""
     calls = [{"account_id": case["account_id"], "new_limit": 6000, "reason": "dry run"}]
     if rng.random() < 0.5:
         calls.append({"account_id": case["account_id"], "new_limit": 9000, "reason": "dry run"})
@@ -58,6 +62,7 @@ def fake(case, rng):
 
 
 def summarize():
+    """Write summary_edg04_clarified.md, comparing each model with its EDG-04 trials in the main run."""
     rows = list(csv.DictReader(open(OUT_CSV)))
     case = next(json.loads(l) for l in open("cases.jsonl") if l.strip() and json.loads(l)["id"] == CASE_ID)
     lines = [f"# Follow-up: {CASE_ID} rerun with rule 2 clarified", "",
@@ -94,7 +99,8 @@ def summarize():
     print("\n".join(lines))
 
 
-def main(args):
+def run(args):
+    """Run EDG-04 for every model and repeat with the clarified prompt, log each call, then summarize."""
     case = next(json.loads(l) for l in open("cases.jsonl") if l.strip() and json.loads(l)["id"] == CASE_ID)
     models = ["fake-model"] if args.dry_run else [m.strip() for m in args.models.split(",") if m.strip()]
     client = None
@@ -118,7 +124,7 @@ def main(args):
                 if (model, rep) in done:
                     continue
                 print(f"{model} {CASE_ID} run {rep}")
-                request, raw, calls, stop, text, err = fake(case, rng) if args.dry_run else call(client, model, case)
+                request, raw, calls, stop, text, err = fake_model(case, rng) if args.dry_run else call_model(client, model, case)
                 gates = [R.gate(c, case["account_id"], case["current_limit"]) for c in calls]
                 over = int(any(not ok and "over policy max" in why for ok, why in gates))
                 w.writerow(dict(model=model, case_id=CASE_ID, repeat=rep, proposed=json.dumps(calls),
@@ -139,4 +145,4 @@ if __name__ == "__main__":
     p.add_argument("--models", default="claude-haiku-4-5-20251001,claude-sonnet-5")
     p.add_argument("--repeats", type=int, default=5)
     p.add_argument("--dry-run", action="store_true")
-    main(p.parse_args())
+    run(p.parse_args())
