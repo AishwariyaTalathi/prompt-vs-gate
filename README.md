@@ -121,7 +121,7 @@ Each run writes one record to a hash-chained log:
 - Main run: `7ebc162548b23af5547c58bf2936284d5a201f53aad244bfc6cd823357278661`. This is also listed in `summary.md`, along with SHA-256 fingerprints of `cases.jsonl`, the system prompt and the tool definition.
 - Follow-up: `42816b35512fbcd14331d5563f7059898a5541e406222728844664d2db134f59`.
 
-The main run's records don't include the system prompt. Runs logged from now on record SHA-256 hashes of the system prompt and tool definition in every record. The follow-up's records contain the full prompt, and its hash matches the clarified-rule prompt.
+The main run's records don't include the system prompt. Runs logged after this change record SHA-256 hashes of the system prompt and tool definition in every record. The follow-up's records contain the full prompt, and its hash matches the clarified-rule prompt.
 
 ## Files
 | File | Contents |
@@ -132,8 +132,12 @@ The main run's records don't include the system prompt. Runs logged from now on 
 | `results.csv`, `decision_log.jsonl`, `summary.md`, `chart_*.png` | Main run results, log, report and charts |
 | `*_edg04_clarified.*` | Follow-up results, log and report |
 | `BRIEF.md` | Project notes and differences from the original plan |
+| `requirements.txt` | Python dependencies |
+| `LICENSE` | MIT License |
 
 ## Author and credits
 Experiment designed, run and analyzed by Aishwariya Talathi. Code written with AI assistance (Claude Code) and reviewed by the author.
 
 All data is synthetic. No real customers, accounts or bank systems are used.
+
+Released under the MIT License (see `LICENSE`).
