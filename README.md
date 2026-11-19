@@ -134,6 +134,11 @@ The main run's records don't include the system prompt. Runs logged after this c
 | `BRIEF.md` | Project notes and differences from the original plan |
 | `requirements.txt` | Python dependencies |
 | `LICENSE` | MIT License |
+| `A-Prompt-Is-Not-a-Control.pdf` | The essay this experiment tests |
+
+## Related essay
+
+This experiment tests the central claim of my essay "A Prompt Is Not a Control: Seven Lessons for Deploying AI Agents in Banking" (written October 2026, first published November 2026): [A-Prompt-Is-Not-a-Control.pdf](A-Prompt-Is-Not-a-Control.pdf)
 
 ## Author and credits
 Experiment designed, run and analyzed by Aishwariya Talathi. Code written with AI assistance (Claude Code) and reviewed by the author.
