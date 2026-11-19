@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this experiment, please cite it as below."
+title: "Prompt vs Gate: Do Written Rules Control an AI Agent?"
+abstract: "A small, reproducible synthetic experiment comparing a lending policy written in an AI agent's prompt with the same policy enforced in code by a deterministic gate."
+authors:
+  - family-names: Talathi
+    given-names: Aishwariya
+version: 1.0.0
+date-released: 2026-11-19
+license: MIT
+repository-code: "https://github.com/AishwariyaTalathi/prompt-vs-gate"
+keywords:
+  - AI governance
+  - AI agents
+  - financial services
+  - consumer lending
+  - audit trail
